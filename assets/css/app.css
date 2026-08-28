@@ -63,8 +63,7 @@ input {
 
 .eyebrow,
 .field-label,
-.connection-status,
-.build-mark {
+.connection-status {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -222,14 +221,6 @@ h1 span {
   animation: tile-pulse 1.4s ease-in-out infinite;
 }
 
-.build-mark {
-  position: absolute;
-  right: 22px;
-  bottom: 18px;
-  color: rgba(255, 255, 255, 0.18);
-  font-size: 8px;
-}
-
 @keyframes tile-pulse {
   50% {
     transform: scale(1.08);
@@ -248,10 +239,6 @@ h1 span {
     right: 8%;
   }
 
-  .build-mark {
-    right: auto;
-    left: 20px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

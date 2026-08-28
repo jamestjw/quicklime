@@ -29,7 +29,9 @@ Visit [localhost:4000](http://localhost:4000). The server is expected to keep ru
 - `Quicklime.Game` contains pure authoritative game-state transitions.
 - `Quicklime.RegionalGame` owns the live regional match, timers, and reconnect grace.
 - `QuicklimeWeb.GameChannel` validates players and forwards tile claims.
-- `assets/src/Main.elm` owns client state and rendering.
+- `assets/src/Main.elm` owns top-level client state and update wiring.
+- `assets/src/Protocol.elm` defines socket commands, events, and JSON decoding.
+- `assets/src/View/` contains the entry, arena, and leaderboard views.
 - `assets/js/app.js` is the narrow Phoenix Socket to Elm ports bridge.
 
 Claims are processed by the regional game server in arrival order. The first correct claim scores 100 points, every wrong claim costs 40 points, and players can keep trying until the tile is won. Disconnected players retain their score for 20 seconds.
