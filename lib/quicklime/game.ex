@@ -51,16 +51,16 @@ defmodule Quicklime.Game do
 
     cond do
       game.phase != :open or game.tile_id != tile_id ->
-        {game, %{status: "stale"}}
+        {game, %{status: :stale}}
 
       is_nil(player) or not player.connected ->
-        {game, %{status: "unavailable"}}
+        {game, %{status: :unavailable}}
 
       game.active_tile != tile_index ->
         penalized = %{player | score: player.score + @wrong_score}
         next_game = put_in(game.players[player_id], penalized)
 
-        {next_game, %{status: "wrong", delta: @wrong_score, player: player_payload(penalized)}}
+        {next_game, %{status: :wrong, delta: @wrong_score, player: player_payload(penalized)}}
 
       true ->
         reaction_ms = max(now_ms - game.opened_at, 0)
@@ -78,7 +78,7 @@ defmodule Quicklime.Game do
           |> Map.merge(%{active_tile: nil, opened_at: nil, phase: :waiting})
 
         result = %{
-          status: "won",
+          status: :won,
           delta: @correct_score,
           reaction_ms: reaction_ms,
           player: player_payload(winner)

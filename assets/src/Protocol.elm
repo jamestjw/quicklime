@@ -1,5 +1,6 @@
 module Protocol exposing
-    ( Connection(..)
+    ( ClaimStatus(..)
+    , Connection(..)
     , Player
     , RankedPlayer
     , ServerEvent(..)
@@ -17,6 +18,13 @@ type Connection
     = Offline
     | Connecting
     | Connected
+
+
+type ClaimStatus
+    = Won
+    | Wrong
+    | Stale
+    | Unavailable
 
 
 type alias Player =
@@ -51,7 +59,7 @@ type ServerEvent
     | TileWon Int Player
     | TileExpired Int
     | LeaderboardChanged Int (List RankedPlayer)
-    | ClaimResult String (Maybe Player) (Maybe Int)
+    | ClaimResult ClaimStatus (Maybe Player) (Maybe Int)
     | ServerError String
 
 
@@ -107,7 +115,7 @@ eventByType eventType =
 
         "claim_result" ->
             Decode.map3 ClaimResult
-                (Decode.field "status" Decode.string)
+                (Decode.field "status" claimStatusDecoder)
                 (Decode.maybe (Decode.field "player" playerDecoder))
                 (Decode.maybe (Decode.field "reaction_ms" Decode.int))
 
@@ -135,6 +143,29 @@ connectionDecoder =
 
                     _ ->
                         Offline
+            )
+
+
+claimStatusDecoder : Decode.Decoder ClaimStatus
+claimStatusDecoder =
+    Decode.string
+        |> Decode.andThen
+            (\status ->
+                case status of
+                    "won" ->
+                        Decode.succeed Won
+
+                    "wrong" ->
+                        Decode.succeed Wrong
+
+                    "stale" ->
+                        Decode.succeed Stale
+
+                    "unavailable" ->
+                        Decode.succeed Unavailable
+
+                    _ ->
+                        Decode.fail ("Unknown claim status: " ++ status)
             )
 
 

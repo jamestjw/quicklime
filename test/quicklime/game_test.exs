@@ -13,11 +13,11 @@ defmodule Quicklime.GameTest do
     {game, winner} = Game.claim(game, "player-one", 1, 7, 1_218)
     {_game, late} = Game.claim(game, "player-two", 1, 7, 1_219)
 
-    assert winner.status == "won"
+    assert winner.status == :won
     assert winner.reaction_ms == 218
     assert winner.player.score == 100
     assert winner.player.wins == 1
-    assert late.status == "stale"
+    assert late.status == :stale
   end
 
   test "wrong attempts are penalized and the player can keep trying" do
@@ -30,11 +30,11 @@ defmodule Quicklime.GameTest do
     {game, second_wrong} = Game.claim(game, "player-one", 1, 5, 1_150)
     {_game, winner} = Game.claim(game, "player-one", 1, 7, 1_200)
 
-    assert first_wrong.status == "wrong"
+    assert first_wrong.status == :wrong
     assert first_wrong.player.score == -40
-    assert second_wrong.status == "wrong"
+    assert second_wrong.status == :wrong
     assert second_wrong.player.score == -80
-    assert winner.status == "won"
+    assert winner.status == :won
     assert winner.player.score == 20
   end
 

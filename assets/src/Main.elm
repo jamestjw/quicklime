@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Protocol exposing (Connection(..), Player, RankedPlayer, ServerEvent(..))
+import Protocol exposing (ClaimStatus(..), Connection(..), Player, RankedPlayer, ServerEvent(..))
 import String
 import View.Arena as Arena
 import View.Entry as Entry
@@ -102,7 +102,9 @@ update msg model =
                     ( applyServerEvent event model, Cmd.none )
 
                 Err _ ->
-                    ( model, Cmd.none )
+                    ( { model | connection = Offline, result = "GAME UPDATE FAILED - REFRESH TO REJOIN" }
+                    , Cmd.none
+                    )
 
 
 applyServerEvent : ServerEvent -> Model -> Model
@@ -169,17 +171,20 @@ replaceOwnPlayer own candidate =
             own
 
 
-claimResultText : String -> Maybe Int -> String
+claimResultText : ClaimStatus -> Maybe Int -> String
 claimResultText status reactionMs =
     case status of
-        "wrong" ->
+        Wrong ->
             "WRONG TILE -40"
 
-        "won" ->
+        Won ->
             "YOU GOT IT - " ++ String.fromInt (Maybe.withDefault 0 reactionMs) ++ "ms"
 
-        _ ->
+        Stale ->
             "TOO LATE"
+
+        Unavailable ->
+            "RECONNECTING - TRY THE NEXT TILE"
 
 
 view : Model -> Html Msg

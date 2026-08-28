@@ -43,11 +43,11 @@ defmodule Quicklime.RegionalGame do
     {game, result} =
       Game.claim(state.game, player_id, tile_id, tile_index, System.monotonic_time(:millisecond))
 
-    if result.status in ["won", "wrong"] do
+    if result.status in [:won, :wrong] do
       broadcast_leaderboard(game)
     end
 
-    if result.status == "won" do
+    if result.status == :won do
       broadcast("tile_won", %{
         tile_id: tile_id,
         winner: result.player,
