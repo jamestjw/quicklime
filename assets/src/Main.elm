@@ -25,7 +25,9 @@ type alias Model =
     { playerName : String
     , screen : Screen
     , connection : Connection
+    -- Identifies the current round so delayed claims can be rejected.
     , tileId : Int
+    -- The lit grid position, or Nothing between rounds.
     , activeTile : Maybe Int
     , playerCount : Int
     , leaderboard : List RankedPlayer
