@@ -1,7 +1,7 @@
 module View.Entry exposing (view)
 
 import Html exposing (Html, button, div, form, h1, input, main_, p, span, text)
-import Html.Attributes exposing (attribute, class, disabled, id, maxlength, placeholder, type_, value)
+import Html.Attributes exposing (attribute, class, disabled, id, maxlength, pattern, placeholder, required, type_, value)
 import Html.Events exposing (onInput, onSubmit)
 import String
 
@@ -25,6 +25,8 @@ view name onNameChanged onStart =
                     , type_ "text"
                     , placeholder "your name"
                     , maxlength 20
+                    , required True
+                    , pattern ".*\\S.*"
                     , attribute "autocomplete" "nickname"
                     , attribute "aria-label" "Player name"
                     , value name

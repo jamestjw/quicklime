@@ -22,7 +22,7 @@ type Screen
 
 
 type alias Model =
-    { name : String
+    { playerName : String
     , screen : Screen
     , connection : Connection
     , tileId : Int
@@ -53,7 +53,7 @@ main =
 
 initialModel : Model
 initialModel =
-    { name = ""
+    { playerName = ""
     , screen = Entry
     , connection = Offline
     , tileId = 0
@@ -69,18 +69,19 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         NameChanged name ->
-            ( { model | name = name }, Cmd.none )
+            ( { model | playerName = name }, Cmd.none )
 
         StartPlaying ->
             let
                 name =
-                    String.trim model.name
+                    String.trim model.playerName
             in
+            -- The form prevents invalid submissions, but keep the state transition safe on its own.
             if String.isEmpty name then
                 ( model, Cmd.none )
 
             else
-                ( { model | name = name, screen = Playing, connection = Connecting }
+                ( { model | playerName = name, screen = Playing, connection = Connecting }
                 , socketCommand (Protocol.joinCommand name)
                 )
 
@@ -191,7 +192,7 @@ view : Model -> Html Msg
 view model =
     case model.screen of
         Entry ->
-            Entry.view model.name NameChanged StartPlaying
+            Entry.view model.playerName NameChanged StartPlaying
 
         Playing ->
             Arena.view
