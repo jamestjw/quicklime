@@ -1,0 +1,652 @@
+@import "tailwindcss" source(none);
+@source "../css";
+@source "../js";
+@source "../../lib/quicklime_web";
+
+@plugin "../vendor/heroicons";
+
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #08080b;
+  color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.entry-page {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 48px 24px;
+  background: radial-gradient(circle at 70% 15%, rgba(198, 255, 61, 0.08), transparent 30%), #08080b;
+}
+
+.grid-backdrop {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+.entry-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 430px);
+}
+
+.brand-block {
+  margin-bottom: 36px;
+}
+
+.eyebrow,
+.field-label,
+.connection-status,
+.build-mark {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #c6ff3d;
+  box-shadow: 0 0 16px rgba(198, 255, 61, 0.7);
+}
+
+.status-dot--idle {
+  background: #ffb020;
+  box-shadow: none;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(48px, 10vw, 72px);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.065em;
+}
+
+h1 span {
+  color: #c6ff3d;
+}
+
+.tagline {
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.entry-form {
+  display: grid;
+  gap: 10px;
+}
+
+.field-label {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10px;
+}
+
+.entry-form input {
+  width: 100%;
+  height: 62px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  outline: none;
+  padding: 0 18px;
+  background: #12121a;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 750;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.entry-form input::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.entry-form input:focus {
+  border-color: #c6ff3d;
+  box-shadow: 0 0 0 4px rgba(198, 255, 61, 0.09);
+}
+
+.entry-form button {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 7px;
+  padding: 0 20px;
+  background: #c6ff3d;
+  color: #08080b;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+.entry-form button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #d8ff72;
+}
+
+.entry-form button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.entry-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.entry-form button span {
+  font-size: 20px;
+}
+
+.connection-status {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 9px;
+  text-align: center;
+}
+
+.connection-status--ready {
+  color: #c6ff3d;
+}
+
+.corner-grid {
+  position: absolute;
+  top: 9%;
+  right: 8%;
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  gap: 7px;
+  opacity: 0.65;
+  transform: rotate(4deg);
+}
+
+.corner-tile {
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  background: #12121a;
+}
+
+.corner-tile--active {
+  border-color: #c6ff3d;
+  background: #c6ff3d;
+  box-shadow: 0 0 32px rgba(198, 255, 61, 0.45);
+  animation: tile-pulse 1.4s ease-in-out infinite;
+}
+
+.build-mark {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  color: rgba(255, 255, 255, 0.18);
+  font-size: 8px;
+}
+
+@keyframes tile-pulse {
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 48px rgba(198, 255, 61, 0.65);
+  }
+}
+
+@media (max-width: 700px) {
+  .entry-page {
+    align-items: end;
+    padding: 40px 20px 72px;
+  }
+
+  .corner-grid {
+    top: 8%;
+    right: 8%;
+  }
+
+  .build-mark {
+    right: auto;
+    left: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.game-page {
+  min-height: 100svh;
+  padding: 20px;
+  background: #08080b;
+}
+
+.game-header {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 4px 18px;
+}
+
+.game-brand {
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.game-brand span {
+  color: #c6ff3d;
+}
+
+.game-meta {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.metric {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.metric span {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.metric strong {
+  font-size: 15px;
+}
+
+.connection-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #ffb020;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.connection-badge--live {
+  color: #c6ff3d;
+}
+
+.game-layout {
+  min-height: calc(100svh - 100px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0b0b10;
+}
+
+.arena {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: #08080b;
+}
+
+.instruction {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(198, 255, 61, 0.35);
+  border-radius: 8px;
+  padding: 0 15px;
+  background: rgba(198, 255, 61, 0.04);
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+}
+
+.instruction--waiting {
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.instruction--waiting .status-dot {
+  background: #2ee6ff;
+  box-shadow: 0 0 16px rgba(46, 230, 255, 0.5);
+}
+
+.rule-copy {
+  margin-left: auto;
+  color: #ff2e88;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.tile-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(54px, 1fr));
+  grid-template-rows: repeat(4, minmax(72px, 1fr));
+  gap: 12px;
+}
+
+.game-tile {
+  position: relative;
+  min-height: 72px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  background: #101017;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease, transform 100ms ease;
+}
+
+.game-tile:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: #15151d;
+}
+
+.game-tile:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.game-tile:disabled {
+  cursor: default;
+}
+
+.game-tile--active {
+  border-color: #c6ff3d;
+  background: #c6ff3d;
+  box-shadow: 0 0 55px rgba(198, 255, 61, 0.32);
+  animation: active-tile-pulse 800ms ease-in-out infinite;
+}
+
+.game-tile--active::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 2px solid #c6ff3d;
+  border-radius: inherit;
+  animation: target-ring 1s ease-out infinite;
+}
+
+.player-stats {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 10px;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 7px;
+  padding: 10px 13px;
+  background: #0f0f15;
+}
+
+.stat span {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.stat strong {
+  color: #fff;
+  font-size: 17px;
+}
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 20px 16px;
+  background: #0b0b10;
+}
+
+.leaderboard-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.leaderboard h2 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+
+.leaderboard-heading > span {
+  color: #c6ff3d;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.leaderboard > p {
+  margin: 7px 0 16px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 10px;
+}
+
+.leaderboard-labels,
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr) 40px 52px;
+  align-items: center;
+  gap: 8px;
+}
+
+.leaderboard-labels {
+  padding: 0 9px 8px;
+  color: rgba(255, 255, 255, 0.28);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.leaderboard-labels span:nth-child(n + 3),
+.leaderboard-row span:nth-child(n + 3),
+.leaderboard-row strong {
+  text-align: right;
+}
+
+.leaderboard-rows {
+  display: grid;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.leaderboard-row {
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 0 9px;
+  background: #12121a;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+.leaderboard-row span:first-child,
+.leaderboard-row span:nth-child(3) {
+  color: rgba(255, 255, 255, 0.38);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.leaderboard-row strong {
+  color: #fff;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.leaderboard-row--you {
+  border-color: #c6ff3d;
+  background: rgba(198, 255, 61, 0.08);
+  color: #c6ff3d;
+}
+
+.leaderboard-row--stalled {
+  border-color: rgba(255, 176, 32, 0.35);
+  opacity: 0.55;
+}
+
+@keyframes active-tile-pulse {
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes target-ring {
+  to {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 850px) {
+  .game-page {
+    padding: 12px;
+  }
+
+  .game-header {
+    align-items: flex-start;
+  }
+
+  .game-meta {
+    gap: 14px;
+  }
+
+  .metric:first-child {
+    display: none;
+  }
+
+  .game-layout {
+    display: block;
+  }
+
+  .arena {
+    min-height: calc(100svh - 88px);
+    padding: 12px;
+  }
+
+  .tile-grid {
+    gap: 7px;
+  }
+
+  .leaderboard {
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .game-brand {
+    font-size: 18px;
+  }
+
+  .game-header {
+    min-height: 52px;
+  }
+
+  .metric strong {
+    font-size: 12px;
+  }
+
+  .connection-badge {
+    font-size: 8px;
+  }
+
+  .instruction {
+    font-size: 12px;
+  }
+
+  .rule-copy {
+    display: none;
+  }
+
+  .tile-grid {
+    grid-template-columns: repeat(4, minmax(48px, 1fr));
+    grid-template-rows: repeat(5, minmax(64px, 1fr));
+  }
+
+  .player-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stat {
+    display: grid;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .stat strong {
+    font-size: 14px;
+  }
+}

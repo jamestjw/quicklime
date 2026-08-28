@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "scripts": {
+    "build:elm": "elm make src/Main.elm --output=elm.js",
+    "build:elm:optimize": "elm make src/Main.elm --optimize --output=elm.js",
+    "test:elm": "elm-test",
+    "watch:elm": "chokidar \"src/**/*.elm\" \"elm.json\" -c \"npm run build:elm\" --initial"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "elm": "^0.19.2-0",
+    "elm-test": "^0.19.2-1"
+  }
+}
